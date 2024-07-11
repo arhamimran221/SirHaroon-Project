@@ -47,6 +47,5 @@
       "jsx-a11y/label-has-associated-control" : "off",
       "prefer-destructuring" : "off"
     }
-    
   }
   
