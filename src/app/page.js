@@ -1,11 +1,9 @@
-import { Provider } from 'react-redux';
-import FormComponent from '../app/Form/FormComponent.jsx';
-import { store } from '../Redux/Store.js';
+import FormComponent from './Form/FormComponent';
 
 export default function Home() {
   return (
-    <div className="container mx-auto">
-      <FormComponent />
-    </div>
+<div className="container mx-auto">
+   <FormComponent />
+            </div>
   );
 }
