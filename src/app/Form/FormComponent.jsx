@@ -1,12 +1,14 @@
 "use client";
+
 import React from "react";
-import { useAppSelector, useAppDispatch } from '../../Redux/hooks.js'
 import { z } from "zod";
 import { Checkbox, Select } from "antd";
-import uploadIcon from "../Assets/Upload-icon.svg";
 import Image from "next/image";
 import Swal from "sweetalert2";
-import { setFormData, setErrors } from "../../Redux/FormSlice"; // Adjust the path as needed
+import { useAppSelector, useAppDispatch } from '../../Redux/hooks';
+import uploadIcon from "../Assets/Upload-icon.svg";
+
+import { setFormData, setErrors } from "../../Redux/FormSlice"; 
 
 const formSchema = z.object({
   text: z.string().nonempty("Text is required"),
@@ -35,8 +37,19 @@ const FormComponent = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    dispatch(setFormData({ [name]: type === "checkbox" ? checked : type === "file" ? files[0] : value }));
+    
+    let newValue;
+    if (type === "checkbox") {
+      newValue = checked;
+    } else if (type === "file") {
+      newValue = files[0];
+    } else {
+      newValue = value;
+    }
+  
+    dispatch(setFormData({ [name]: newValue }));
   };
+  
 
   const handleDropdownChange = (value) => {
     dispatch(setFormData({ dropdown: value }));
@@ -46,11 +59,10 @@ const FormComponent = () => {
     e.preventDefault();
     const result = formSchema.safeParse(formData);
     if (result.success) {
-      console.log("Form data is valid", formData);
       dispatch(setErrors({}));
       Swal.fire({
         title: "Form Submitted!",
-        text: "Your form is been submitted!",
+        text: "Your form has been submitted!",
         icon: "success"
       });
     } else {
@@ -83,7 +95,7 @@ const FormComponent = () => {
             />
             {errors.text && (
               <p className="text-red-500 text-xs italic mt-[5px]">
-                {errors.text._errors[0]}
+                {errors.text.errors[0]}
               </p>
             )}
           </div>
@@ -101,53 +113,53 @@ const FormComponent = () => {
             />
             {errors.number && (
               <p className="text-red-500 text-xs italic mt-[5px]">
-                {errors.number._errors[0]}
+                {errors.number.errors[0]}
               </p>
             )}
           </div>
         </div>
 
         <div className="flex w-[100%] gap-[20px] mb-4">
-        <div className="w-[50%]">
-          <label className="block text-sm font-bold mb-2" htmlFor="password">
-            Password <sup className="text-[#ff0000] text-[14px]">*</sup>
-          </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="*********"
-            value={formData.password}
-            onChange={handleChange}
-            className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#6366F1] sm:text-xs sm:leading-6"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.password._errors[0]}
-            </p>
-          )}
-        </div>
-        <div className="w-[50%]">
-          <label className="block text-sm font-bold mb-2" htmlFor="dropdown">
-            Dropdown <sup className="text-[#ff0000] text-[14px]">*</sup>
-          </label>
-          <Select
-            name="dropdown"
-            value={formData.dropdown}
-            onChange={(e)=>handleDropdownChange(e)}
-            className=" w-[100%] h-[36px]"
-          >
-            <Option value="Japan">Japan</Option>
-            <Option value="India">India</Option>
-            <Option value="Turkey">Turkey</Option>
-            <Option value="Dubai">Dubai</Option>
-            <Option value="Other">Other Country</Option>
-          </Select>
-          {errors.dropdown && (
-            <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.dropdown._errors[0]}
-            </p>
-          )}
-        </div>
+          <div className="w-[50%]">
+            <label className="block text-sm font-bold mb-2" htmlFor="password">
+              Password <sup className="text-[#ff0000] text-[14px]">*</sup>
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="*********"
+              value={formData.password}
+              onChange={handleChange}
+              className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#6366F1] sm:text-xs sm:leading-6"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs italic mt-[5px]">
+                {errors.password.errors[0]}
+              </p>
+            )}
+          </div>
+          <div className="w-[50%]">
+            <label className="block text-sm font-bold mb-2" htmlFor="dropdown">
+              Dropdown <sup className="text-[#ff0000] text-[14px]">*</sup>
+            </label>
+            <Select
+              name="dropdown"
+              value={formData.dropdown}
+              onChange={(e)=>handleDropdownChange(e)}
+              className=" w-[100%] h-[36px]"
+            >
+              <Option value="Japan">Japan</Option>
+              <Option value="India">India</Option>
+              <Option value="Turkey">Turkey</Option>
+              <Option value="Dubai">Dubai</Option>
+              <Option value="Other">Other Country</Option>
+            </Select>
+            {errors.dropdown && (
+              <p className="text-red-500 text-xs italic mt-[5px]">
+                {errors.dropdown.errors[0]}
+              </p>
+            )}
+          </div>
         </div>
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2 " htmlFor="gender">
@@ -179,7 +191,7 @@ const FormComponent = () => {
           </div>
           {errors.gender && (
             <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.gender._errors[0]}
+              {errors.gender.errors[0]}
             </p>
           )}
         </div>
@@ -206,33 +218,23 @@ const FormComponent = () => {
               </label>
                &nbsp;to upload file
             </h2>
-            <p className="font-poppins font-[400] text-[#676767] text-[12px] leading-[18px]">
+            <p className="font-poppins font-[400] text-[#676767] text-[12px] leading-[18px] text-center">
               Supported formates: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
             </p>
           </div>
           {errors.file && (
             <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.file._errors[0]}
+              {errors.file.errors[0]}
             </p>
           )}
         </div>
         <div className="mb-4">
           <div className="flex gap-[6px] items-center">
-            {/* <input
-              type="checkbox"
-              name="acceptTerms"
-              checked={formData.acceptTerms}
-              onChange={handleChange}
-              className="mr-2 leading-tight"
-            />
-            <p className="font-poppins text-[14px] font-[400]">
-              Terms & Conditions
-            </p> */}
             <Checkbox checked={formData.acceptTerms} onChange={handleChange} name="acceptTerms">Terms & Conditions</Checkbox>
           </div>
           {errors.acceptTerms && (
             <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.acceptTerms._errors[0]}
+              {errors.acceptTerms.errors[0]}
             </p>
           )}
         </div>

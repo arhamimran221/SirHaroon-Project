@@ -1,4 +1,5 @@
 "use client";
+
 import { configureStore } from '@reduxjs/toolkit';
 import formReducer from './FormSlice'; // Adjust the path as needed
 
