@@ -1,9 +1,10 @@
-import FormComponent from './Form/FormComponent';
+import FormComponent from './Form/FormComponent'
 
 export default function Home() {
   return (
-<div className="container mx-auto">
-   <FormComponent />
-            </div>
-  );
+    <div className="container mx-auto">
+      <FormComponent />
+    </div>
+  )
 }
+
