@@ -34,7 +34,7 @@ const FormComponent = () => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector((state) => state.form.formData);
   const errors = useAppSelector((state) => state.form.errors);
-
+  
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     
@@ -49,7 +49,7 @@ const FormComponent = () => {
   
     dispatch(setFormData({ [name]: newValue }));
   };
-  
+
 
   const handleDropdownChange = (value) => {
     dispatch(setFormData({ dropdown: value }));
@@ -69,9 +69,8 @@ const FormComponent = () => {
       const fieldErrors = result.error.format();
       dispatch(setErrors(fieldErrors));
     }
-  };
-
-  return (
+  };  
+   return (
     <div className="flex justify-center items-center min-h-screen w-[100%] bg-[#F8F7FA]">
       <form
         onSubmit={handleSubmit}
@@ -95,7 +94,7 @@ const FormComponent = () => {
             />
             {errors.text && (
               <p className="text-red-500 text-xs italic mt-[5px]">
-                {errors.text.errors[0]}
+                {errors.text._errors[0]}
               </p>
             )}
           </div>
@@ -113,7 +112,7 @@ const FormComponent = () => {
             />
             {errors.number && (
               <p className="text-red-500 text-xs italic mt-[5px]">
-                {errors.number.errors[0]}
+                {errors.number._errors[0]}
               </p>
             )}
           </div>
@@ -134,7 +133,7 @@ const FormComponent = () => {
             />
             {errors.password && (
               <p className="text-red-500 text-xs italic mt-[5px]">
-                {errors.password.errors[0]}
+                {errors.password._errors[0]}
               </p>
             )}
           </div>
@@ -156,7 +155,7 @@ const FormComponent = () => {
             </Select>
             {errors.dropdown && (
               <p className="text-red-500 text-xs italic mt-[5px]">
-                {errors.dropdown.errors[0]}
+                {errors.dropdown._errors[0]}
               </p>
             )}
           </div>
@@ -191,7 +190,7 @@ const FormComponent = () => {
           </div>
           {errors.gender && (
             <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.gender.errors[0]}
+              {errors.gender._errors[0]}
             </p>
           )}
         </div>
@@ -200,7 +199,7 @@ const FormComponent = () => {
             File Upload <sup className="text-[#ff0000] text-[14px]">*</sup>
           </label>
           <div className="w-[100%] bg-[#f4f8ff] border-dashed border-[2px]	border-[#3B82F6] rounded-[4px] flex py-8 flex-col items-center mt-[6px]">
-            <Image src={uploadIcon} />
+            <Image src={uploadIcon} alt="Upload Icon Here"/>
             <h2 className="font-poppins font-[600] text-[16px] text-[#454545] my-[5px]">
               <label
                 htmlFor="file"
@@ -224,7 +223,7 @@ const FormComponent = () => {
           </div>
           {errors.file && (
             <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.file.errors[0]}
+              {errors.file._errors[0]}
             </p>
           )}
         </div>
@@ -234,7 +233,7 @@ const FormComponent = () => {
           </div>
           {errors.acceptTerms && (
             <p className="text-red-500 text-xs italic mt-[5px]">
-              {errors.acceptTerms.errors[0]}
+              {errors.acceptTerms._errors[0]}
             </p>
           )}
         </div>
