@@ -50,7 +50,6 @@ const FormComponent = () => {
     dispatch(setFormData({ [name]: newValue }));
   };
 
-  const getError = (field) => {return errors[field]?._errors?.[0];};
 
   const handleDropdownChange = (value) => {
     dispatch(setFormData({ dropdown: value }));
