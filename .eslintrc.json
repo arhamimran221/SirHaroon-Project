@@ -46,7 +46,8 @@
       "react/function-component-definition" : "off",
       "jsx-a11y/label-has-associated-control" : "off",
       "prefer-destructuring" : "off",
-      "no-underscore-dangle" : "off"
+      "no-underscore-dangle" : "off",
+      "react/no-array-index-key" : "off"
     }
   }
   

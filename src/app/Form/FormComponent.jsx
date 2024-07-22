@@ -37,7 +37,7 @@ const FormComponent = () => {
   const [filePreview ,setFilePreview] = useState();
 
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, checked, files } = e.target;
     let newValue = value;
     
     const map = {
@@ -63,7 +63,6 @@ const FormComponent = () => {
   
   useEffect(()=>{
     if(formData.file){
-     const fileReader = new FileReader();
      const url = URL.createObjectURL(formData.file);
      setFilePreview(url);
     }
@@ -167,7 +166,10 @@ const FormComponent = () => {
               onChange={(e)=>handleDropdownChange(e)}
               className=" w-[100%] h-[36px]"
             >
-              {optionArray.map((item,key) =>(<Option value={item} key={key}>{item}</Option>))}
+              {optionArray.map((item,key) =>(
+              <div className="" key={key}>
+              <Option value={item}>{item}</Option>
+              </div>))}
             </Select>
             {errors.dropdown && (
               <p className="text-red-500 text-xs italic mt-[5px]">
@@ -216,7 +218,7 @@ const FormComponent = () => {
           </label>
           {formData.file?
           <div className="w-[100%] bg-[#f4f8ff] border-dashed border-[2px]	border-[#3B82F6] rounded-[4px] flex flex-col items-center mt-[6px]">
-           <img src={filePreview} alt="" srcSet="" />
+           <Image src={filePreview} alt="file Preview"/>
           </div>: 
           <div className="w-[100%] bg-[#f4f8ff] border-dashed border-[2px]	border-[#3B82F6] rounded-[4px] flex py-8 flex-col items-center mt-[6px]">
           <Image src={uploadIcon} alt="Upload Icon Here"/>
