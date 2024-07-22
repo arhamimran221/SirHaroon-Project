@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { Checkbox, Select } from "antd";
 import Image from "next/image";
@@ -34,22 +34,40 @@ const FormComponent = () => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector((state) => state.form.formData);
   const errors = useAppSelector((state) => state.form.errors);
-  
+  const [filePreview ,setFilePreview] = useState();
+
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
+    let newValue = value;
     
-    let newValue;
-    if (type === "checkbox") {
-      newValue = checked;
-    } else if (type === "file") {
-      newValue = files[0];
-    } else {
-      newValue = value;
-    }
+    const map = {
+      checkbox: newValue = checked,
+      file: newValue = files[0],
+    };
+
+    if (map[value]) {
+      newValue = map[value];
+    };
+    
+    // let newValue;
+    // if (type === "checkbox") {
+    //   newValue = checked;
+    // } else if (type === "file") {
+    //   newValue = files[0];
+    // } else {
+    //   newValue = value;
+    // }
   
     dispatch(setFormData({ [name]: newValue }));
   };
-
+  
+  useEffect(()=>{
+    if(formData.file){
+     const fileReader = new FileReader();
+     const url = URL.createObjectURL(formData.file);
+     setFilePreview(url);
+    }
+  },[formData.file])
 
   const handleDropdownChange = (value) => {
     dispatch(setFormData({ dropdown: value }));
@@ -70,6 +88,8 @@ const FormComponent = () => {
       dispatch(setErrors(fieldErrors));
     }
   };  
+  const optionArray = ["India" ,"Turkey" ,"Dubai","Others"]; 
+
    return (
     <div className="flex justify-center items-center min-h-screen w-[100%] bg-[#F8F7FA]">
       <form
@@ -147,11 +167,7 @@ const FormComponent = () => {
               onChange={(e)=>handleDropdownChange(e)}
               className=" w-[100%] h-[36px]"
             >
-              <Option value="Japan">Japan</Option>
-              <Option value="India">India</Option>
-              <Option value="Turkey">Turkey</Option>
-              <Option value="Dubai">Dubai</Option>
-              <Option value="Other">Other Country</Option>
+              {optionArray.map((item,key) =>(<Option value={item} key={key}>{item}</Option>))}
             </Select>
             {errors.dropdown && (
               <p className="text-red-500 text-xs italic mt-[5px]">
@@ -198,29 +214,33 @@ const FormComponent = () => {
           <label className="block text-sm font-bold mb-2" htmlFor="file">
             File Upload <sup className="text-[#ff0000] text-[14px]">*</sup>
           </label>
+          {formData.file?
+          <div className="w-[100%] bg-[#f4f8ff] border-dashed border-[2px]	border-[#3B82F6] rounded-[4px] flex flex-col items-center mt-[6px]">
+           <img src={filePreview} alt="" srcSet="" />
+          </div>: 
           <div className="w-[100%] bg-[#f4f8ff] border-dashed border-[2px]	border-[#3B82F6] rounded-[4px] flex py-8 flex-col items-center mt-[6px]">
-            <Image src={uploadIcon} alt="Upload Icon Here"/>
-            <h2 className="font-poppins font-[600] text-[16px] text-[#454545] my-[5px]">
-              <label
-                htmlFor="file"
-                className="text-[#3B82F6] hover:underline cursor-pointer"
-              >
-                <input
-                  id="file"
-                  type="file"
-                  name="file"
-                  className="hidden"
-                  onChange={handleChange}
-                  accept="JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT"
-                />
-                Browse 
-              </label>
-               &nbsp;to upload file
-            </h2>
-            <p className="font-poppins font-[400] text-[#676767] text-[12px] leading-[18px] text-center">
-              Supported formates: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
-            </p>
-          </div>
+          <Image src={uploadIcon} alt="Upload Icon Here"/>
+          <h2 className="font-poppins font-[600] text-[16px] text-[#454545] my-[5px]">
+            <label
+              htmlFor="file"
+              className="text-[#3B82F6] hover:underline cursor-pointer"
+            >
+              <input
+                id="file"
+                type="file"
+                name="file"
+                className="hidden"
+                onChange={handleChange}
+                accept="JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT"
+              />
+              Browse 
+            </label>
+             &nbsp;to upload file
+          </h2>
+          <p className="font-poppins font-[400] text-[#676767] text-[12px] leading-[18px] text-center">
+            Supported formates: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+          </p>
+        </div>}
           {errors.file && (
             <p className="text-red-500 text-xs italic mt-[5px]">
               {errors.file._errors[0]}
